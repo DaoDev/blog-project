@@ -8,27 +8,17 @@ import { postsState } from "../../redux/selectors";
 function PostList() {
   const dispatch = useDispatch();
   const posts = useSelector(postsState);
-
-  console.log("post", posts);
-
   React.useEffect(() => {
     dispatch(actions.getPosts.getPostsRequest());
   }, [dispatch]);
 
   return (
     <Grid container spacing={2} alignItems="stretch">
-      <Grid item xs={12} sm={6}>
-        <Post />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Post />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Post />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Post />
-      </Grid>
+      {posts.map((post) => (
+        <Grid item xs={12} sm={6}>
+          <Post key={post._id} post={post} />
+        </Grid>
+      ))}
     </Grid>
   );
 }

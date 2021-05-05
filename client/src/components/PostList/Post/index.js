@@ -10,40 +10,55 @@ import {
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-
+import moment from "moment";
 import React from "react";
+import useStyles from "./styles";
+import { useDispatch } from "react-redux";
+import { updatePost } from "../../../redux/actions";
 
-function Post(props) {
+function Post({ post }) {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const onLikeBtnClick = React.useCallback(() => {
+    dispatch(
+      updatePost.updatePostRequest({ ...post, likeCount: post.likeCount + 1 })
+    );
+  }, [dispatch, post]);
+
   return (
     <Card>
       <CardHeader
-        avatar={<Avatar></Avatar>}
-        title="This is Title"
-        subheader="Apr 30, 2021"
+        avatar={<Avatar>A</Avatar>}
+        title={post.author}
+        subheader={moment(post.updateAt).format("HH:MM MM DD , YYYY")}
         action={
           <IconButton>
             <MoreVertIcon />
           </IconButton>
         }
-      >
-        <CardMedia image="" title="" Title />
-        <CardContent>
-          <Typography variant="h5" color="textPrimary">
-            This is Titles Post
+      />
+      <CardMedia
+        image={post.attachment}
+        title="Title"
+        className={classes.media}
+      />
+      <CardContent>
+        <Typography variant="h5" color="textPrimary">
+          {post.title}
+        </Typography>
+        <Typography variant="body2" component="p" color="textSecondary">
+          {post.content}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <IconButton onClick={onLikeBtnClick}>
+          <FavoriteIcon />
+          <Typography component="span" color="textSecondary">
+            {`${post.likeCount} likes`}
           </Typography>
-          <Typography variant="body2" component="p" color="textSecondary">
-            This is Content Post
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <IconButton>
-            <FavoriteIcon />
-            <Typography component="span" color="textSecondary">
-              10 likes
-            </Typography>
-          </IconButton>
-        </CardActions>
-      </CardHeader>
+        </IconButton>
+      </CardActions>
     </Card>
   );
 }
